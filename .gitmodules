@@ -1,0 +1,3 @@
+[submodule "diveintoansible-lab"]
+	path = diveintoansible-lab
+	url = https://github.com/spurin/diveintoansible-lab.git
