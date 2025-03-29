@@ -12,6 +12,7 @@ services:
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/ubuntu-c/ansible:/home/ansible
      - ${ANSIBLE_HOME}/ubuntu-c/root:/root
+     - ${TEMPLATE}:/home/ansible/template
     networks:
      - diveinto.io
 
