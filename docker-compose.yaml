@@ -3,7 +3,7 @@ services:
     hostname: ubuntu-c
     container_name: ubuntu-c
     image: spurin/diveintoansible:ansible
-    ports: 
+    ports:
      - ${UBUNTUC_PORT_SSHD}:22
      - ${UBUNTUC_PORT_TTYD}:7681
     privileged: true
@@ -20,7 +20,7 @@ services:
     hostname: ubuntu1
     container_name: ubuntu1
     image: spurin/diveintoansible:ubuntu
-    ports: 
+    ports:
      - ${UBUNTU1_PORT_SSHD}:22
      - ${UBUNTU1_PORT_TTYD}:7681
     privileged: true
@@ -36,7 +36,7 @@ services:
     hostname: ubuntu2
     container_name: ubuntu2
     image: spurin/diveintoansible:ubuntu
-    ports: 
+    ports:
      - ${UBUNTU2_PORT_SSHD}:22
      - ${UBUNTU2_PORT_TTYD}:7681
     privileged: true
@@ -52,7 +52,7 @@ services:
     hostname: ubuntu3
     container_name: ubuntu3
     image: spurin/diveintoansible:ubuntu
-    ports: 
+    ports:
      - ${UBUNTU3_PORT_SSHD}:22
      - ${UBUNTU3_PORT_TTYD}:7681
     privileged: true
@@ -68,7 +68,7 @@ services:
     hostname: centos1
     container_name: centos1
     image: spurin/diveintoansible:centos_stream
-    ports: 
+    ports:
      - ${CENTOS1_PORT_SSHD}:22
      - ${CENTOS1_PORT_TTYD}:7681
     privileged: true
@@ -77,6 +77,7 @@ services:
      - ${ANSIBLE_HOME}/shared:/shared
      - ${ANSIBLE_HOME}/centos1/ansible:/home/ansible
      - ${ANSIBLE_HOME}/centos1/root:/root
+     - ${ANSIBLE_HOME}/centos1/etc/ssh/sshd_config:/etc/ssh/sshd_config
     networks:
      - diveinto.io
 
@@ -84,7 +85,7 @@ services:
     hostname: centos2
     container_name: centos2
     image: spurin/diveintoansible:centos_stream
-    ports: 
+    ports:
      - ${CENTOS2_PORT_SSHD}:22
      - ${CENTOS2_PORT_TTYD}:7681
     privileged: true
@@ -100,7 +101,7 @@ services:
     hostname: centos3
     container_name: centos3
     image: spurin/diveintoansible:centos_stream
-    ports: 
+    ports:
      - ${CENTOS3_PORT_SSHD}:22
      - ${CENTOS3_PORT_TTYD}:7681
     privileged: true
