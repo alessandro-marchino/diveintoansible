@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "At the third stroke, the time sponsored by Ansible will be $(date +%H:%M:%S) ... beep beep beep\n"
