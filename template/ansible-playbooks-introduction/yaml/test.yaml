@@ -1,0 +1,74 @@
+# Every YAML file should start with three dashes
+---
+
+example_key_1: this is a string
+example_key_2: this is another string
+
+no_quotes: this is a string example\n
+double_quotes: "this is a string example\n"
+single_quotes: 'this is a string example\n'
+
+example_key_3: |
+  this is a string
+  that goes over
+  multiple lines
+
+example_key_4: >-
+  this is a string
+  that goes over
+  multiple lines
+
+example_integer: 1
+example_integer_2: "1"
+
+# n does not equal false, y does not equal true
+is_false_01: false
+is_false_02: False
+is_false_03: FALSE
+is_false_04: no
+is_false_05: No
+is_false_06: NO
+is_false_07: off
+is_false_08: Off
+is_false_09: OFF
+is_false_10: n
+
+is_true_01: true
+is_true_02: True
+is_true_03: TRUE
+is_true_04: yes
+is_true_05: Yes
+is_true_06: YES
+is_true_07: on
+is_true_08: On
+is_true_09: ON
+is_true_10: y
+
+list:
+  - item 1
+  - item 2
+  - item 3
+  - item 4
+  - item 5
+
+example_key_5:
+  sub_example_key5: sub_example_value5
+example_key_6:
+  sub_example_key6: sub_example_value6
+
+example_dictionary_1:
+  - example_dictionary:2:
+    - 1
+    - 2
+    - 3
+  - example_dictionary:3:
+    - 4
+    - 5
+    - 6
+  - example_dictionary:4:
+    - 7
+    - 8
+    - 9
+
+# Every YAML file should end with three dots
+...

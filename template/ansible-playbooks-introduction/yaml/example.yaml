@@ -1,0 +1,23 @@
+---
+Aston Martin:
+  year_founded: 1913
+  website: https://www.astonmartin.com
+  founded_by:
+    - Lionel Martin
+    - Robert Bamford
+Fiat:
+  year_founded: 1899
+  website: https://www.fiat.com
+  founded_by:
+    - Giovanni Agnelli
+Ford:
+  year_founded: 1903
+  website: https://www.ford.com
+  founded_by:
+    - Henry Ford
+Vauxhall:
+  year_founded: 1857
+  website: https://www.vauxhall.co.uk
+  founded_by:
+    - Alexander Wilson
+...
