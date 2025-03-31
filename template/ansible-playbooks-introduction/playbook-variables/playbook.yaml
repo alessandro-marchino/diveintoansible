@@ -1,0 +1,137 @@
+---
+
+-
+  # Hosts: where our play will run and options it will run with
+  hosts: centos
+  gather_facts: true
+  # Vars: variables that will apply to the play, on all target systems
+  vars:
+    example_key: example value
+    dict:
+      dict_key: This is a dictionary value
+    inline_dict:
+      { inline_dict_key: This is an inline dictionary value }
+    named_list:
+      - item1
+      - item2
+      - item3
+      - item4
+    inline_named_list:
+      [ item1, item2, item3, item4 ]
+  vars_files:
+    - external_vars.yaml
+  vars_prompt:
+    - name: username
+      private: false
+      prompt: Enter username
+    - name: password
+      private: true
+      prompt: Enter password
+  # Tasks: the list of tasks that will be executed within the play, this section can also be use for pre- and post-tasks
+  tasks:
+    - name: Test dictionary key value
+      debug:
+        msg: "{{ example_key }}"
+    - name: Test named dictionary dictionary
+      debug:
+        msg: "{{ dict }}"
+    - name: Test named dictionary dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ dict.dict_key }}"
+    - name: Test named dictionary dictionary key value with python brackets notation
+      debug:
+        msg: "{{ dict['dict_key'] }}"
+    - name: Test named inline dictionary
+      debug:
+        msg: "{{ inline_dict }}"
+    - name: Test named inline dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ inline_dict.inline_dict_key }}"
+    - name: Test named inline dictionary key value with python brackets notation
+      debug:
+        msg: "{{ inline_dict['inline_dict_key'] }}"
+    - name: Test named list
+      debug:
+        msg: "{{ named_list }}"
+    - name: Test named list first item dot notation
+      debug:
+        msg: "{{ named_list.0 }}"
+    - name: Test named list first item brackets notation
+      debug:
+        msg: "{{ named_list[0] }}"
+    - name: Test inline named list
+      debug:
+        msg: "{{ inline_named_list }}"
+    - name: Test inline named list first item dot notation
+      debug:
+        msg: "{{ inline_named_list.0 }}"
+    - name: Test inline named list first item brackets notation
+      debug:
+        msg: "{{ inline_named_list[0] }}"
+
+    - name: Test dictionary key value
+      debug:
+        msg: "{{ external_example_key }}"
+    - name: Test external named dictionary dictionary
+      debug:
+        msg: "{{ external_dict }}"
+    - name: Test external named dictionary dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ external_dict.dict_key }}"
+    - name: Test external named dictionary dictionary key value with python brackets notation
+      debug:
+        msg: "{{ external_dict['dict_key'] }}"
+    - name: Test external named inline dictionary
+      debug:
+        msg: "{{ external_inline_dict }}"
+    - name: Test external named inline dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ external_inline_dict.inline_dict_key }}"
+    - name: Test external named inline dictionary key value with python brackets notation
+      debug:
+        msg: "{{ external_inline_dict['inline_dict_key'] }}"
+    - name: Test external named list
+      debug:
+        msg: "{{ external_named_list }}"
+    - name: Test external named list first item dot notation
+      debug:
+        msg: "{{ external_named_list.0 }}"
+    - name: Test external named list first item brackets notation
+      debug:
+        msg: "{{ external_named_list[0] }}"
+    - name: Test external inline named list
+      debug:
+        msg: "{{ external_inline_named_list }}"
+    - name: Test external inline named list first item dot notation
+      debug:
+        msg: "{{ external_inline_named_list.0 }}"
+    - name: Test external inline named list first item brackets notation
+      debug:
+        msg: "{{ external_inline_named_list[0] }}"
+
+    - name: Test vars_prompt
+      debug:
+        msg: "{{ username }}"
+    - name: Test vars_prompt private
+      debug:
+        msg: "{{ password }}"
+
+    # - name: Test hostvars with an ansible fact and collect ansible_port, dot notation
+    #   debug:
+    #     msg: "{{ hostvars[ansible_hostname].ansible_port }}"
+    # - name: Test hostvars with an ansible fact and collect ansible_port, dict notation
+    #   debug:
+    #     msg: "{{ hostvars[ansible_hostname]['ansible_port'] }}"
+    - name: Test hostvars with an ansible fact and collect ansible_port, dot notation, default if not found
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_port | default('22') }}"
+    - name: Test hostvars with an ansible fact and collect ansible_port, dict notation, default if not found
+      debug:
+        msg: "{{ hostvars[ansible_hostname]['ansible_port'] | default('22') }}"
+    - name: Test groupvars
+      debug:
+        msg: "{{ ansible_user }}"
+    - name: Test groupvars with an ansible fact, show that the variable is also accessible from the hostvars section
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_user }}"
+...
