@@ -1,0 +1,56 @@
+---
+
+- hosts: linux
+  vars_files:
+    - vars/logos.yaml
+  tasks:
+    - name: Install EPEL
+      yum:
+        name: epel-release
+        update_cache: yes
+        state: latest
+      when: ansible_distribution == 'CentOS'
+    # - name: Install Nginx CentOS
+    #   yum:
+    #     name: nginx
+    #     update_cache: yes
+    #     state: latest
+    #   when: ansible_distribution == 'CentOS'
+    # - name: Install Nginx Ubuntu
+    #   apt:
+    #     name: nginx
+    #     update_cache: yes
+    #     state: latest
+    #   when: ansible_distribution == 'Ubuntu'
+    - name: Install Nginx
+      package:
+        name: nginx
+        state: latest
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+      notify: Check HTTP Service
+    - name: Template index.html-easter_egg to index.html on target
+      template:
+        src: templates/index.html-easter_egg.j2
+        dest: "{{ nginx_root_location }}/index.html"
+        mode: 0644
+    # Easter egg
+    - name: Install Unzip
+      package:
+        name: unzip
+        state: latest
+    - name: Unarchive playbook stacker game
+      unarchive:
+        src: playbook_stacker.zip
+        dest: "{{ nginx_root_location }}"
+        mode: 0755
+
+  handlers:
+    - name: Check HTTP Service
+      uri:
+        url: "http://{{ ansible_default_ipv4.address }}"
+        status_code: 200
+
+...
