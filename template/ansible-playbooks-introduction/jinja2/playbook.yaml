@@ -1,0 +1,101 @@
+---
+
+-
+  hosts: all
+  tasks:
+    - name: Ansible Jinja2 if elif else
+      debug:
+        msg: >
+          --== Ansible Jinja2 if elif else statement ==--
+
+          {# If the hostname is ubuntu-c, include a message -#}
+          {% if ansible_hostname == "ubuntu-c" -%}
+            This is ubuntu-c
+          {% elif ansible_hostname == "centos1" %}
+            This is centos1 with its modified SSH Port
+          {% else %}
+            This is good old {{ ansible_hostname }}
+          {% endif %}
+    - name: Ansible Jinja2 if variable is defined ( where variable is not defined )
+      debug:
+        msg: >
+          --== Ansible Jinja2 if variable is defined ( where variable is not defined ) ==--
+
+          {% if example_variable is defined -%}
+            example_variable is defined
+          {% else %}
+            example_variable is not defined
+          {% endif %}
+    - name: Ansible Jinja2 if variable is defined ( where variable is defined )
+      debug:
+        msg: >
+          --== Ansible Jinja2 if variable is defined ( where variable is defined ) ==--
+          {% set example_variable = 'test' %}
+          {% if example_variable is defined -%}
+            example_variable is defined
+          {% else %}
+            example_variable is not defined
+          {% endif %}
+    - name: Ansible Jinja2 for statement
+      debug:
+        msg: >
+          --== Ansible Jinja2 for statement ==--
+          {% for entry in ansible_interfaces -%}
+            Interface entry {{ loop.index }} = {{ entry }}
+          {% endfor %}
+    - name: Ansible Jinja2 for range
+      debug:
+        msg: >
+          --== Ansible Jinja2 for range ==--
+          {% for entry in range(1, 11) -%}
+            {{ entry }}
+          {% endfor %}
+    - name: Ansible Jinja2 for, reversed (simulate while greater 5)
+      debug:
+        msg: >
+          --== Ansible Jinja2 for, reversed (simulate while greater 5) ==--
+          {% for entry in range(10, 0, -1) -%}
+            {% if entry == 5 -%}
+              {% break %}
+            {% endif -%}
+            {{ entry }}
+          {% endfor %}
+    - name: Ansible Jinja2 for, reversed (continue if odd)
+      debug:
+        msg: >
+          --== Ansible Jinja2 for, reversed (continue if odd) ==--
+          {% for entry in range(10, 0, -1) -%}
+            {% if entry is odd -%}
+              {% continue %}
+            {% endif -%}
+            {{ entry }}
+          {% endfor %}
+    - name: Ansible Jinja2 filters
+      debug:
+        msg: >
+          --== Ansible Jinja2 filters ==--
+
+          --== min [1, 2, 3, 4, 5] ==--
+          {{ [1, 2, 3, 4, 5] | min }}
+
+          --== max [1, 2, 3, 4, 5] ==--
+          {{ [1, 2, 3, 4, 5] | max }}
+
+          --== unique [1, 1, 2, 2, 3, 3, 4, 4, 5, 5] ==--
+          {{ [1, 1, 2, 2, 3, 3, 4, 4, 5, 5] | unique }}
+
+          --== difference [1, 2, 3, 4, 5] vd [2, 3, 4] ==--
+          {{ [1, 2, 3, 4, 5] | difference([2, 3, 4]) }}
+
+          --== random ['rod', 'jane', 'freddy' ] ==--
+          {{ ['rod', 'jane', 'freddy'] | random }}
+
+          --== urlsplit hostname ==--
+          {{ "http://docs.ansible.com/ansible/latest/playbook_filters.html" | urlsplit('hostname') }}
+    - name: Jinja2 template
+      template:
+        src: template.j2
+        dest: "/tmp/{{ ansible_hostname }}_template.out"
+        trim_blocks: true
+        mode: 0644
+...
