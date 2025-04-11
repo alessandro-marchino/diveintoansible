@@ -1,0 +1,33 @@
+---
+
+- hosts: linux
+  tasks:
+    - name: Exploring register
+      command: hostname -s
+      register: hostname_output
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version | int >= 8 )
+        or ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 20 )
+    - name: Show hostname_output
+      debug:
+        var: hostname_output
+    - name: Show hostname_output standard output
+      debug:
+        var: hostname_output.stdout
+    - name: Register only CentOS
+      command: hostname -s
+      when:
+        - ansible_distribution == "CentOS"
+        - ansible_distribution_major_version | int >= 8
+      register: command_register
+    - name: Install patch when changed
+      yum:
+        name: patch
+        state: present
+      when: command_register is changed
+    - name: Install patch when skipped
+      apt:
+        name: patch
+        state: present
+      when: command_register is skipped
+
+...
