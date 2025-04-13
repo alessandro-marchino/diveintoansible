@@ -1,0 +1,99 @@
+---
+
+- hosts: linux
+  vars:
+    jobids: []
+  tasks:
+    - name: Task 1
+      command: /bin/sleep 5
+      async: 10
+      poll: 0
+      register: result1
+    - name: Task 2
+      command: /bin/sleep 5
+      async: 10
+      poll: 0
+      register: result2
+    - name: Task 3
+      command: /bin/sleep 5
+      async: 10
+      poll: 0
+      register: result3
+    - name: Task 4
+      command: /bin/sleep 20
+      async: 30
+      poll: 0
+      register: result4
+    - name: Task 5
+      command: /bin/sleep 5
+      async: 10
+      poll: 0
+      register: result5
+    - name: Task 6
+      command: /bin/sleep 5
+      async: 10
+      poll: 0
+      register: result6
+    - name: Show registered context
+      debug:
+        var: result1
+    - name: Show registered context as jinja2
+      debug:
+        msg: "{{ result1 }}"
+    - name: Capture Job IDs
+      set_fact:
+        jobids: >
+                {% if item.ansible_job_id is defined -%}
+                  {{ jobids + [item.ansible_job_id] }}
+                {% else -%}
+                  {{ jobids }}
+                {% endif %}
+      with_items: "{{ [ result1, result2, result3, result4, result5, result6 ] }}"
+    - name: Show Job IDs
+      debug:
+        var: jobids
+    - name: Wait for Job IDs
+      async_status:
+        jid: "{{ item }}"
+      with_items: "{{ jobids }}"
+      register: jobs_result
+      until: jobs_result.finished
+      retries: 30
+
+- hosts: linux
+  gather_facts: false
+  serial:
+    - 1
+    - 2
+    - 3
+  tasks:
+    - name: Task 1
+      command: "/bin/sleep 1"
+    - name: Task 2
+      command: "/bin/sleep 1"
+    - name: Task 3
+      command: "/bin/sleep 1"
+    - name: Task 4
+      command: "/bin/sleep 1"
+    - name: Task 5
+      command: "/bin/sleep 1"
+    - name: Task 6
+      command: "/bin/sleep 1"
+
+- hosts: linux
+  gather_facts: false
+  strategy: free
+  tasks:
+    - name: Task 1
+      command: "/bin/sleep {{ 10 | random }}"
+    - name: Task 2
+      command: "/bin/sleep {{ 10 | random }}"
+    - name: Task 3
+      command: "/bin/sleep {{ 10 | random }}"
+    - name: Task 4
+      command: "/bin/sleep {{ 10 | random }}"
+    - name: Task 5
+      command: "/bin/sleep {{ 10 | random }}"
+    - name: Task 6
+      command: "/bin/sleep {{ 10 | random }}"
+...
