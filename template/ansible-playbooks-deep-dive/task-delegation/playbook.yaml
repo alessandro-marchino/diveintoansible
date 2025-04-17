@@ -1,0 +1,103 @@
+---
+
+- hosts: ubuntu-c
+  tasks:
+    - name: Generate an OpenSSH keypair for ubuntu3
+      openssh_keypair:
+        path: ~/.ssh/ubuntu3_id_rsa
+
+- hosts: linux
+  gather_facts: false
+  tasks:
+    - name: Copy ubuntu3 OpenSSH keypair with permissions
+      copy:
+        owner: root
+        src: "{{ item.0 }}"
+        dest: "{{ item.0 }}"
+        mode: "{{ item.1 }}"
+      with_together:
+        - [ ~/.ssh/ubuntu3_id_rsa, ~/.ssh/ubuntu3_id_rsa.pub ]
+        - [ "0600", "0644" ]
+
+- hosts: ubuntu3
+  gather_facts: false
+  tasks:
+    - name: Add public key to the ubuntu3 auhorized_keys file
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '~/.ssh/ubuntu3_id_rsa.pub' )}}"
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check that ssh can connect to ubuntu3 using the ssh tool
+      command: ssh -i ~/.ssh/ubuntu3_id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@ubuntu3 date
+      changed_when: false
+      ignore_errors: true
+
+- hosts: ubuntu-c, centos1, ubuntu1
+  serial: 1
+  tasks:
+    - name: Add host to /etc/hosts.allow for sshd
+      lineinfile:
+        path: /etc/hosts.allow
+        line: "sshd: {{ ansible_hostname }}.diveinto.io"
+        create: true
+      delegate_to: ubuntu3
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check that ssh can connect to ubuntu3 using the ssh tool
+      command: ssh -i ~/.ssh/ubuntu3_id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@ubuntu3 date
+      changed_when: false
+      ignore_errors: true
+
+- hosts: ubuntu3
+  gather_facts: false
+  tasks:
+    - name: Drop SSH connectivity from everywhere else
+      lineinfile:
+        path: /etc/hosts.deny
+        line: "sshd: ALL"
+        create: true
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check that ssh can connect to ubuntu3 using the ssh tool
+      command: ssh -i ~/.ssh/ubuntu3_id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@ubuntu3 date
+      changed_when: false
+      ignore_errors: true
+
+# Cleanup
+- hosts: ubuntu-c, centos1, ubuntu1
+  serial: 1
+  tasks:
+    - name: Remove specific host entries in /etc/hosts.allow for sshd
+      lineinfile:
+        path: /etc/hosts.allow
+        line: "sshd: {{ ansible_hostname }}.diveinto.io"
+        state: absent
+      delegate_to: ubuntu3
+
+- hosts: ubuntu3
+  gather_facts: false
+  tasks:
+    - name: Allow SSH connectivity from everywhere
+      lineinfile:
+        path: /etc/hosts.deny
+        line: "sshd: ALL"
+        state: absent
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check that ssh can connect to ubuntu3 using the ssh tool
+      command: ssh -i ~/.ssh/ubuntu3_id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@ubuntu3 date
+      changed_when: false
+      ignore_errors: true
+
+
+...
