@@ -100,3 +100,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,visualstudiocode,ansible
 
 ansible_home/
+template/ansible-playbooks-deep-dive/magic-variables/captured_variables/
