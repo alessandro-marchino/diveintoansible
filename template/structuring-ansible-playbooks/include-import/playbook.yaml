@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Play 1 - Task 1
+      debug:
+        msg: Play 1 - Task 1
+    - include_tasks: tasks.yaml
+    - import_tasks: tasks.yaml
+
+- hosts: centos1
+  tasks:
+    - debug:
+        msg: =================== Testing include_tasks ===================
+    # include_tasks is dynamic - the when statement is executed once, if the condition is met, all tasks are exwecuted
+    - include_tasks: tasks2.yaml
+      when: include_tasks_var is not defined
+
+    - debug:
+        msg: =================== Testing import_tasks ===================
+    # import_tasks is static - each task in the include will be independently executed against the when condition
+    - import_tasks: tasks2.yaml
+      when: include_tasks_var is not defined
+...

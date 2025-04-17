@@ -1,0 +1,11 @@
+---
+- set_fact:
+    include_tasks_var: foo
+
+- name: Play 1 - Task 3
+  debug:
+    msg: Play 1 - Task 3
+- name: Play 1 - Task 4
+  debug:
+    msg: Play 1 - Task 4
+...
