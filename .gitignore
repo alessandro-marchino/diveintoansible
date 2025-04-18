@@ -101,3 +101,4 @@ $RECYCLE.BIN/
 
 ansible_home/
 template/ansible-playbooks-deep-dive/magic-variables/captured_variables/
+__pycache__/
