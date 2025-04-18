@@ -1,0 +1,18 @@
+---
+
+- hosts: linux
+  tasks:
+    - name: Test icmp module
+      icmp:
+        target: 127.0.0.1
+    # - name: Test icmp module - failure
+    #   icmp:
+    #     target: centos4
+    - name: Test icmp2 module
+      icmp2:
+        target: 127.0.0.1
+    - name: Test icmp2 module - failure
+      icmp2:
+        target: centos4
+
+...
