@@ -1,0 +1,3 @@
+docker run --rm --interactive --tty wernight/funbox cmatrix
+docker run --rm --interactive --tty wernight/funbox nyancat
+docker run --rm --interactive --tty wernight/funbox asciiquarium
